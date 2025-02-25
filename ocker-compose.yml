@@ -1,0 +1,40 @@
+version: '3.9'
+
+services:
+  homeassistant:
+    container_name: homeassistant
+    image: ghcr.io/home-assistant/home-assistant:stable
+    volumes:
+      - /home/usuario/homeassistant:/config
+    environment:
+      - TZ=America/Sao_Paulo
+    network_mode: "host"
+    restart: unless-stopped
+    privileged: true
+
+  mariadb:
+    container_name: mariadb
+    image: mariadb:latest
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: homeassistant
+      MYSQL_USER: hass
+      MYSQL_PASSWORD: hasspassword
+    volumes:
+      - /home/usuario/mariadb:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: homeassistant
+      POSTGRES_USER: hass
+      POSTGRES_PASSWORD: hasspassword
+    volumes:
+      - /home/usuario/postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
